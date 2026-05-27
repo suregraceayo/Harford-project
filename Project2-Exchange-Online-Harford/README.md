@@ -1,29 +1,29 @@
-# 📧 Project 2 — Exchange Online Administration
+#  Project 2 — Exchange Online Administration
 **Harford Property Management | Exchange Online Implementation**
 
 ---
 
-## 📋 Project Overview
+##  Project Overview
 
 | Field | Details |
 |---|---|
 | **Client** | Harford Property Management |
 | **Domain** | @christtech.co.uk |
 | **UPN Convention** | firstname.harford@christtech.co.uk |
-| **Difficulty** | 🟢 Beginner |
+| **Difficulty** | Beginner |
 | **Estimated Time** | 22–28 hours |
 | **Target Roles** | M365 Administrator · Exchange Administrator · IT Support Engineer |
 | **Driver** | Audit approaching — no shared mailboxes, no distribution lists, spam flooding inboxes, leaver mailbox inaccessible |
 
 ---
 
-## 🏢 Business Scenario
+## Business Scenario
 
 Harford Property Management has just migrated from on-premises Exchange to Exchange Online. No shared mailboxes were created, no distribution lists configured, spam is flooding inboxes, and nobody can access the previous IT manager's emails who left three months ago. An audit is approaching.
 
 ---
 
-## 👥 User Naming Convention
+##  User Naming Convention
 
 | Field | Format | Example |
 |---|---|---|
@@ -33,7 +33,7 @@ Harford Property Management has just migrated from on-premises Exchange to Excha
 
 ---
 
-## 🔌 Connecting to Exchange Online
+##  Connecting to Exchange Online
 
 ```powershell
 # Install module if not already installed
@@ -45,7 +45,7 @@ Connect-ExchangeOnline -UserPrincipalName admin.harford@christtech.co.uk
 
 ---
 
-## 📬 1. Shared Mailboxes
+##  1. Shared Mailboxes
 
 ### Mailbox Architecture Design
 
@@ -105,7 +105,7 @@ Add-RecipientPermission -Identity "support.harford@christtech.co.uk" `
   -AccessRights SendAs -Confirm:$false
 ```
 
-> ⚠️ **Send As Permission Delay:** Granting Send As does not take effect immediately. It can take **up to 60 minutes** to propagate. During this window, emails sent as the shared mailbox may still display the sender's personal address. Build this waiting time into testing and set user expectations accordingly.
+>  **Send As Permission Delay:** Granting Send As does not take effect immediately. It can take **up to 60 minutes** to propagate. During this window, emails sent as the shared mailbox may still display the sender's personal address. Build this waiting time into testing and set user expectations accordingly.
 
 ### Verify Shared Mailboxes
 
@@ -117,7 +117,7 @@ Get-RecipientPermission -Identity "info.harford@christtech.co.uk" | Where-Object
 
 ---
 
-## 📋 2. Distribution Lists
+##  2. Distribution Lists
 
 ### Distribution List Design
 
@@ -174,7 +174,7 @@ Get-DistributionGroupMember -Identity "allstaff.harford@christtech.co.uk" | FL D
 
 ---
 
-## 🏢 3. Room & Equipment Mailboxes
+##  3. Room & Equipment Mailboxes
 
 ### Mailbox Design
 
@@ -222,11 +222,11 @@ Get-Mailbox -Identity "projector.harford@christtech.co.uk" | FL Name, Alias, Rec
 Get-CalendarProcessing -Identity "projector.harford@christtech.co.uk" | FL AutomateProcessing, AllowConflicts
 ```
 
-> ⚠️ **Challenge:** The auto-accept setting alone does not prevent double-bookings. `AllowConflicts $false` must be explicitly set via PowerShell. Without it, the room mailbox will accept overlapping bookings.
+>  **Challenge:** The auto-accept setting alone does not prevent double-bookings. `AllowConflicts $false` must be explicitly set via PowerShell. Without it, the room mailbox will accept overlapping bookings.
 
 ---
 
-## 📨 4. Mail Flow Rules
+##  4. Mail Flow Rules
 
 ### Rule Design & Priority Order
 
@@ -256,7 +256,7 @@ New-TransportRule -Name "Harford - External Subject Prefix" `
   -Priority 1
 ```
 
-> ⚠️ **Challenge:** Scope must be `NotInOrganization` — if set incorrectly to all senders, this rule fires on internal emails too.
+>  **Challenge:** Scope must be `NotInOrganization` — if set incorrectly to all senders, this rule fires on internal emails too.
 
 ### Rule 3 — External Email Disclaimer (Priority 2)
 
@@ -284,11 +284,11 @@ New-TransportRule -Name "Harford - HR Redirect" `
 Get-TransportRule | Sort-Object Priority | FL Name, Priority, State
 ```
 
-> ⚠️ **Rule Ordering:** Rules are evaluated top-down by priority. Lower number = higher priority. Always test individually before applying tenant-wide.
+>  **Rule Ordering:** Rules are evaluated top-down by priority. Lower number = higher priority. Always test individually before applying tenant-wide.
 
 ---
 
-## 🛡️ 5. Anti-Spam Policy
+##  5. Anti-Spam Policy
 
 ### Policy Design
 
@@ -324,7 +324,7 @@ Get-HostedContentFilterRule -Identity "Harford Management Anti-Spam Rule" | FL N
 
 ---
 
-## 🔐 6. Modern Authentication — Block Basic Auth
+##  6. Modern Authentication — Block Basic Auth
 
 ### Policy Design
 
@@ -363,11 +363,11 @@ Get-User -ResultSize Unlimited | Where-Object {
 
 ---
 
-## 🔓 7. Leaver Mailbox Access
+##  7. Leaver Mailbox Access
 
 ### Legal & HR Approval Process
 
-> ⚠️ **GDPR Requirement:** Access to a leaver's mailbox must NOT be granted without documented authorisation.
+>  **GDPR Requirement:** Access to a leaver's mailbox must NOT be granted without documented authorisation.
 
 | Step | Action | Owner |
 |---|---|---|
@@ -412,7 +412,7 @@ Remove-MailboxPermission -Identity "formeritmanager.harford@christtech.co.uk" `
 
 ---
 
-## 📚 Runbooks
+##  Runbooks
 
 ### Runbook 1 — Create Shared Mailbox
 
@@ -479,7 +479,7 @@ Remove-MailboxPermission -Identity "formeritmanager.harford@christtech.co.uk" `
 
 ---
 
-## 📋 Change Record
+##  Change Record
 
 | Field | Details |
 |---|---|
@@ -489,12 +489,12 @@ Remove-MailboxPermission -Identity "formeritmanager.harford@christtech.co.uk" `
 | **Implemented By** | itadmin.harford@christtech.co.uk |
 | **Approved By** | IT Manager |
 | **Description** | Created 3 shared mailboxes, 3 distribution lists, 1 room mailbox, 1 equipment mailbox, 4 mail flow rules, anti-spam policy for management, blocked basic auth, granted leaver mailbox access with GDPR approval |
-| **Status** | ✅ Completed |
+| **Status** |  Completed |
 | **Rollback Plan** | Remove mail flow rules, delete shared mailboxes, revert auth policy, remove leaver mailbox permissions |
 
 ---
 
-## 🔧 Troubleshooting Guide
+##  Troubleshooting Guide
 
 ### Issue 1: Send As Still Showing Personal Address
 **Cause:** Send As propagation delay — up to 60 minutes.
@@ -547,7 +547,7 @@ Add-MailboxPermission -Identity "formeritmanager.harford@christtech.co.uk" `
 
 ---
 
-## 💡 Lessons Learned
+##  Lessons Learned
 
 1. **Always test mail flow rules in a small scope before applying tenant-wide** — one incorrectly scoped rule affects every email in the organisation.
 2. **Permission propagation delays are real** — build waiting time into runbooks and set user expectations.
@@ -557,7 +557,7 @@ Add-MailboxPermission -Identity "formeritmanager.harford@christtech.co.uk" `
 
 ---
 
-## 📁 Repository Structure
+##  Repository Structure
 
 ```
 Greenwood/
